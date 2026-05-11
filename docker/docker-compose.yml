@@ -1,0 +1,12 @@
+services:
+  server:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "${RAG_PORT}:${RAG_PORT}"
+    env_file:
+      - ../.env
+    volumes:
+      - ../src:/app/src
+      - ./.lancedb:/app/.lancedb

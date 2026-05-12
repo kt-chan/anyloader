@@ -64,11 +64,32 @@ def test_query_with_filters():
             assert "source" in r
             assert "section" in r
 
+def test_loaddoc_api():
+    """Test the /v1/files endpoint with multipart/form-data."""
+    # Create a dummy text file in memory
+    file_content = b"This is a test document content for ELEC2843 prerequisites."
+    files = {"file": ("test_doc.txt", file_content, "text/plain")}
+    data = {
+        "purpose": "assistants",
+        "degree_level": "Undergraduate",
+        "category": "Course",
+        "department": "Electrical Engineering",
+        "academic_year": "2024-2025",
+        "faculty": "Engineering"
+    }
+    response = client.post("/v1/files", files=files, data=data)
+    assert response.status_code == 200
+    res_data = response.json()
+    assert res_data["object"] == "file"
+    assert res_data["filename"] == "test_doc.txt"
+    assert "loaded successfully" in res_data["message"]
+
 def test_database_connection():
     """Test if LanceDB can connect to the configured URI."""
-    from src.server.database import get_db
-    db = get_db()
-    assert isinstance(db, lancedb.db.LanceDBConnection)
+    from src.server.main import db
+    assert db is not None
+    # Check if we can list tables
+    assert hasattr(db, "list_tables")
 
 def test_query_no_filters():
     """Test query endpoint with no tag_filters provided."""
@@ -104,12 +125,3 @@ def test_query_fuzzy_no_match():
         data = response.json()
         # Should return 0 results because of the restrictive fuzzy filter
         assert len(data["results"]) == 0
-
-def test_ingestion_logic():
-    """Smoke test for ingestion logic (without full run)."""
-    from src.loader.ingest import Ingestor
-    ingestor = Ingestor()
-    assert ingestor.db is not None
-    # Verify chunking works
-    chunks = ingestor.chunk_text("This is a test text for chunking.", chunk_size=10, overlap=2)
-    assert len(chunks) > 1

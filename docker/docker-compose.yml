@@ -9,4 +9,5 @@ services:
       - ../.env
     volumes:
       - ../src:/app/src
-      - ./.lancedb:/app/.lancedb
+      - ../storage:/app/storage
+      - ../data:/app/data

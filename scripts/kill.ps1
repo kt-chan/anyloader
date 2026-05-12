@@ -20,7 +20,7 @@ $listeningProcesses = Get-NetTCPConnection -LocalPort 8000 -State Listen -ErrorA
 
 if (-not $listeningProcesses) {
     Write-Host "No processes found listening on TCP port 8000." -ForegroundColor Yellow
-    exit 0
+    return
 }
 
 Write-Host "Found $($listeningProcesses.Count) process(es) listening on port 8000:" -ForegroundColor Cyan
@@ -39,7 +39,7 @@ if (-not $Force) {
     $confirmation = Read-Host "`nDo you want to kill these processes? (y/n)"
     if ($confirmation -ne 'y') {
         Write-Host "Aborted." -ForegroundColor Yellow
-        exit 0
+        return
     }
 }
 

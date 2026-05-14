@@ -63,7 +63,30 @@ anyLoader/
     LLM_API_KEY=your-api-key
     ```
 
+### Docker Setup (Recommended)
+
+The easiest way to run anyLoader is using Docker and Docker Compose. This ensures all dependencies and environment settings are correctly configured.
+
+1.  **Build and Start Services**:
+    From the project root, run:
+    ```bash
+    cd docker
+    docker-compose up --build
+    ```
+    This will:
+    *   Build and start the **Server** (FastAPI RAG API).
+    *   Start the **Loader** (Ingestion service) which will wait for the server to be healthy before processing documents in the `data/` directory.
+
+2.  **Verify Status**:
+    *   The API will be available at `http://localhost:8000`.
+    *   Check logs to see ingestion progress: `docker-compose logs -f loader`.
+
 ## 📖 Usage
+
+### Linux Management Scripts
+For Linux (Ubuntu) users, management scripts are provided in the `scripts/` directory:
+*   **Manage Server**: `./scripts/manage_server.sh {start|stop|restart|status}`
+*   **Run Loader**: `./scripts/run_loader.sh`
 
 ### 1. Ingest Data
 Place your documents in the `data/` folder following the established directory hierarchy, then run the ingestion script:

@@ -26,7 +26,7 @@ services:
     env_file:
       - ../.env
     environment:
-      - RAG_HOST=server
+      - RAG_HOST_PATH=server
       - RAG_PORT=8000
       - INPUT_DIR=/app/data
     volumes:

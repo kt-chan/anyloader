@@ -43,7 +43,7 @@ curl -X POST "http://localhost:8000/query" \
 
 ## Environment
 
-* **LLM endpoint** from `.env` variables `LLM_HOST_PATH`, `LLM_MODEL_NAME`, `LLM_API_KEY`.
+* **LLM endpoint** from `.env` variables `LLM_HOST_URL`, `LLM_MODEL_NAME`, `EMBEDDING_MODEL_NAME`, `API_KEY`.
 * **Local** Windows, VS Code, PowerShell.
 * **Storage** lancedb files should put under `storage/` folder at project root.
 * **Data** rich document data are put under `data/` folder at project root.

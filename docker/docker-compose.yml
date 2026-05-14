@@ -2,12 +2,39 @@ services:
   server:
     build:
       context: ..
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/Dockerfile.server
     ports:
-      - "${RAG_PORT}:${RAG_PORT}"
+      - "${RAG_PORT:-8000}:8000"
     env_file:
       - ../.env
+    environment:
+      - LANCEDB_URI=/app/storage/lancedb
+      - RAG_HOST_PATH=0.0.0.0
+      - RAG_PORT=8000
     volumes:
-      - ../src:/app/src
       - ../storage:/app/storage
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  loader:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.loader
+    env_file:
+      - ../.env
+    environment:
+      - RAG_HOST=server
+      - RAG_PORT=8000
+      - INPUT_DIR=/app/data
+    volumes:
       - ../data:/app/data
+    depends_on:
+      server:
+        condition: service_healthy
+
+networks:
+  default:
+    name: anyloader-network

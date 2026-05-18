@@ -1,0 +1,101 @@
+# 健康状态：
+curl -X 'GET' \
+  'http://141.112.68.88:18888/health' \
+  -H 'accept: application/json'
+返回：
+{
+  "status": "healthy"
+}
+
+
+
+# 查询chunk：
+curl -X 'POST' \
+  'http://141.112.68.88:18888/search_chunks' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "query": "the instructors of ACCT",
+  "collection": "DATASET_HKU",
+  "top_k": 10,
+  "candidate_k": 15,
+  "dense_weight": 1,
+  "sparse_weight": 1,
+  "tag_filters": {
+    "exact": {
+      "department": "CS"
+    },
+    "range": {
+      "academic_year": [2025, 2026]
+    },
+    "fuzzy": {
+    }
+  },
+  "rerank": true,
+  "score_threshold": 0,
+  "use_sparse": true
+}'
+查询结果：
+{
+  "results": [
+    {
+      "text": "5. Course Objectives\nA+,A,A- Candidate has consistently demonstrated a thorough grasp of the subject as evidenced by original or exceptionally astute analysis and synthesis.\n\n<table><tbody><tr><td rowspan=\"2\">Course Teaching and Learning Activities</td><td colspan=\"6\">Aligned Faculty Learning Goals</td></tr><tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr><tr><td>CLO1.Analyze modern large financialinstitutions financial statements including locating,interpreting information and data.</td><td><img src=\"/md_image/25_26-ACCT3115-2A.pdf_1__inner3_image_0.png\"></td><td><img src=\"/md_image/25_26-ACCT3115-2A.pdf_1__inner3_image_1.png\"></td><td></td><td></td><td></td><td></td></tr><tr><td>CLO2. Use the located financial statement information and data to calculate relevant metrics and critically assess various risk exposure and performance by the modern large financial institutions.</td><td><img src=\"/md_image/25_26-ACCT3115-2A.pdf_1__inner3_image_2.png\"></td><td><img src=\"/md_image/25_26-ACCT3115-2A.pdf_1__inner3_image_3.png\"></td><td></td><td></td><td></td><td></td></tr><tr><td>CLO3.Evaluate the bank management's disclosure practice and potential for mis-reporting (including ethical dimensions)</td><td></td><td><img src=\"/md_image/25_26-ACCT3115-2A.pdf_1__inner3_image_4.png\"></td><td><img src=\"/md_image/25_26-ACCT3115-2A.pdf_1__inner3_image_6.png\"></td><td></td><td></td><td></td></tr><tr><td> CLO4.Improve written and oral communication skills</td><td></td><td></td><td><img src=\"/md_image/25_26-ACCT3115-2A.pdf_1__inner3_image_7.png\"></td><td><img src=\"/md_image/25_26-ACCT3115-2A.pdf_1__inner3_image_5.png\"></td><td></td><td></td></tr></tbody></table>",
+      "metadata": {
+        "document_id": "466272116625963360",
+        "original_file_name": "25_26-ACCT3115-2A.pdf",
+        "original_file_path": "/dataset/8b93d050-2941-4c0c-ab47-c482c72f7a37/25_26-ACCT3115-2A.pdf",
+        "chunk_type": "table",
+        "file_url": "null",
+        "metadata": "{\"parent_chunk\": \"61d90ae8-dab1-44f0-8193-94c9d9247219_3\", \"child_chunks\": \"\", \"related_chunks\": [{\"brothers\": []}, {\"related_images\": []}, {\"related_tables\": []}, {\"related_chapters\": []}], \"reference_chunks\": [], \"title_list\": [[\"1\", \"5. Course Objectives\"]], \"tags\": [], \"file_path\": \"/dataset/8b93d050-2941-4c0c-ab47-c482c72f7a37/25_26-ACCT3115-2A.pdf\", \"chunk_idx\": 7, \"page_index\": [1]}",
+        "language": "english",
+        "collection": "DATASET_HKU"
+      },
+      "source": "/dataset/8b93d050-2941-4c0c-ab47-c482c72f7a37/25_26-ACCT3115-2A.pdf"
+    }
+  ]
+}
+
+# 上传文件：
+curl -X 'POST' \
+  'http://141.112.68.88:18888/upload_file' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: multipart/form-data' \
+  -F 'file=@25_26-ACCT3115-2A.pdf;type=application/pdf'
+返回：
+{
+  "id": 1,
+  "name": "25_26-ACCT3115-2A.pdf",
+  "size": 2476684,
+  "extension": "pdf",
+  "mime_type": "application/pdf",
+  "created_at": 1778739880
+}
+
+# 入库文件：
+curl -X 'POST' \
+  'http://141.112.68.88:18888/process' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "file_id": 1,
+  "input_tags": {
+   "academic_year": 2025,
+   "department": "CS"
+  }
+}'
+返回：
+{
+  "task_id": "170f1b60-b821-4fbd-8fce-ac731e48813e"
+}
+
+# 入库状态：
+curl -X 'GET' \
+  'http://141.112.68.88:18888/process/status/170f1b60-b821-4fbd-8fce-ac731e48813e' \
+  -H 'accept: application/json'
+
+返回：
+{
+  "task_id": "170f1b60-b821-4fbd-8fce-ac731e48813e",
+  "status": "COMPLETED",
+  "error": null
+}

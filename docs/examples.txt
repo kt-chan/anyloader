@@ -1,6 +1,6 @@
 # 健康状态：
 curl -X 'GET' \
-  'http://141.112.68.88:18888/health' \
+  'http://10.64.142.35:18888/health' \
   -H 'accept: application/json'
 返回：
 {
@@ -11,7 +11,26 @@ curl -X 'GET' \
 
 # 查询chunk：
 curl -X 'POST' \
-  'http://141.112.68.88:18888/search_chunks' \
+  'http://10.64.142.35:18888/search_chunks' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "query": "the Curriculum requirements of BASc(SDS)",
+  "tag_filters": {
+    "exact": {
+      "faculty": "Faculty of Education",
+      "academic_year": "2024-2025"
+    }
+  },
+  "rerank": true,
+  "score_threshold": 0,
+  "use_sparse": true
+}'
+
+
+# 查询chunk：
+curl -X 'POST' \
+  'http://10.64.142.35:18888/search_chunks' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -57,7 +76,7 @@ curl -X 'POST' \
 
 # 上传文件：
 curl -X 'POST' \
-  'http://141.112.68.88:18888/upload_file' \
+  'http://10.64.142.35:18888/upload_file' \
   -H 'accept: application/json' \
   -H 'Content-Type: multipart/form-data' \
   -F 'file=@25_26-ACCT3115-2A.pdf;type=application/pdf'
@@ -73,7 +92,7 @@ curl -X 'POST' \
 
 # 入库文件：
 curl -X 'POST' \
-  'http://141.112.68.88:18888/process' \
+  'http://10.64.142.35:18888/process' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -90,7 +109,7 @@ curl -X 'POST' \
 
 # 入库状态：
 curl -X 'GET' \
-  'http://141.112.68.88:18888/process/status/170f1b60-b821-4fbd-8fce-ac731e48813e' \
+  'http://10.64.142.35:18888/process/status/170f1b60-b821-4fbd-8fce-ac731e48813e' \
   -H 'accept: application/json'
 
 返回：
